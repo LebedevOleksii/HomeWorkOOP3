@@ -83,14 +83,14 @@ class Machine {
         }
         const replay = () => {
             const a = "" + getRandomInt(1, 9), b = getRandomInt(1, 9), c = getRandomInt(1, 9);
-            const n = (a + b + c).split('');
+            const n = (a + b + c).split('');    // генеруємо випадкове число, з трьох випадкових чисел
             let p = 0;
-            for (i=0; i < n.length; i ++) {
+            for (i=0; i < n.length; i ++) {  // перевіряємо скільки чисел збіглось якщо 292 = 2, 123 = 1, 444 = 3
                 if( n[0] == n[i]){
                     p += 1
                 }
             }
-            if ( p == 2) {
+            if ( p == 2) {         // якщо два числа збіглось то введену сумму множимо на два і повертаємо, але якщо в автоматі меньше грошей ніж m * 2 далі теж купа таких проблем
                 this.money - m * 2;
                 return m * 2
             } else if (n == 777) {
