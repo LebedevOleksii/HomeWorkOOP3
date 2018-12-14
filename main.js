@@ -1,42 +1,49 @@
 class Casino {
-    constructor(machines = [], startMoney, count){
+    constructor(startMoney, machines = []){
         this.machines = machines;
         this.startMoney = startMoney;
-        this.count = count;
     };
+    
     casionAllMoney() {  // загальна сума грошей в цілому казино вичисляємо з масиву
         const allMoney = this.machines.reduce(function(item, current){
             return item + current.money
         },0);
         return allMoney
     };
-    casinoHowManyMachines() {  // кількість автоматів, вичисляємо їх з масиву
+    casinoCountMachines() {  // кількість автоматів, вичисляємо їх з масиву
         const allMachines = this.machines.length
         return allMachines
     };
-    casinoGetOneNewMachine() {  // створюємо автомат, даючи йому половину грошей з найбагатшого автомату
-        const richMachine = () => {
-            const arrMoney = [];
-            this.machines.forEach((elem) => {
-            arrMoney.push(elem.money)
-            return arrMoney
-            })
-            const item = this.machines.find(item => item.money == Math.max(...arrMoney));
-            item.money = item.money / 2;
-            return item
+    casinoAddMachine() {  // створюємо автомат, даючи йому половину грошей з найбагатшого автоматy
+        function richMachine(m, start){
+            if (m.length > 0) {
+                let arrMoney = []
+                m.forEach((elem) => {
+                arrMoney.push(elem.money)
+                return arrMoney
+                })
+                const machine = m.find(machine => machine.money == Math.max(...arrMoney));
+                machine.money = machine.money / 2;
+                return machine.money
+            } else if (m.length >= 0) {
+                return start
+            }
         }
-        // const machine = new Machine {}
-        this.money = richMachine() / 2;
+        const machine = new Machine (richMachine( this.machines, this.startMoney))
+        this.machines.push(machine);
+        this.machines.forEach((machine, index) => {
+            machine.id = index
+        });
+
     };
-    casinoDeleteMachine(id) { // видаляємо автомат а гроші розподіляємо між рештою автоматів
-        const dm = item.id;
-        const average = dm / this.machines.length - 1;
-        this.machines.filter(item => item == item.id);
+    casinoDeleteMachine() { // видаляємо автомат а гроші розподіляємо між рештою автоматів  АЛЕ ЯК НАМ ДОСТУКАТИСЬ ДО КОНКРЕТНОГО АВТОМАТУ ЩОБ ВИДАЛИТИ ЙОГО?(
+        const average = this.money / this.machines.length - 1;
+        this.machines.filter(item => item == this.money);
         this.machines.forEach((elem) => {
            return elem + average
         });  
     };
-    casinoGetMoney(x) {    
+    casinoGetMoney(x) {     // зняти певну сумму грошей з казино
         this.machines.sort(function (a, b) {
             if (a.money > b.money) {
               return -1;
@@ -46,7 +53,7 @@ class Casino {
             }
             return 0;
           });
-       for (i = 0; i < this.machines.length; i++){
+       for (let i = 0; i < this.machines.length; i++){
            if (this.machines[i].money < x) {
                 x = x - this.machines[i].money;
                 this.machines[i].money = 0;
@@ -63,20 +70,20 @@ class Machine {
     constructor(money) {
         this.money = money;
     };
-    machineAllMoney() {
+    machineAllMoney() {      // гроші в автоматі
         return this.money
     };
-    machineGetAllMoney() {
+    machineGetAllMoney() {   // зняти всі гроші з автомату
         const m = this.money;
         this.money = 0;
         return m
     };
-    mashinePushMoney(m) {
+    mashinePushMoney(m) {   // закинути гроші в автомат
         if (m > 0) {
             this.money = this.money + m
         } 
     };
-    machinePlay(m) {
+    machinePlay(m) {       // зіграти на автоматі
         this.money = this.money + m
         const getRandomInt = (min, max) => {
             return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -100,6 +107,10 @@ class Machine {
             } else if ( p === 3) {
                 this.money > 1000 ? this.money = this.money - 1000 : void 0;
                 return 1000
+            }
         }
     }
 }
+
+const casino = new Casino(100000);
+console.log(casino);
